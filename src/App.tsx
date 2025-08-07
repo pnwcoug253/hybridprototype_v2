@@ -1,20 +1,22 @@
+// src/App.tsx - Updated
 // @ts-nocheck
 import React, { useState } from 'react';
 import { Button } from '@carbon/react';
 import { ArrowRight, Warning } from '@carbon/icons-react';
 import { vmwareVMs, vmwareHosts, vmwareDatastores } from './data/vmwareData';
-import { 
-  defaultCostProfile, 
-  calculateTotalCosts, 
+import {
+  defaultCostProfile,
+  calculateTotalCosts,
   identifyOptimizationOpportunities,
-  CostProfile 
+  CostProfile
 } from './utils/costCalculations';
 import QuickStart from './components/QuickStart';
 import GuidedSetup from './components/GuidedSetup';
 import AdvancedMode from './components/AdvancedMode';
 import CostDashboard from './components/CostDashboard';
+import HybridCostFlow from './components/HybridCostFlow';
 
-type PathType = 'none' | 'quick' | 'guided' | 'advanced';
+type PathType = 'none' | 'quick' | 'guided' | 'advanced' | 'demo';
 
 function App() {
   const [selectedPath, setSelectedPath] = useState<PathType>('none');
@@ -35,10 +37,15 @@ function App() {
     setCostProfile(defaultCostProfile);
   };
 
+  // Show the complete flow demo
+  if (selectedPath === 'demo') {
+    return <HybridCostFlow />;
+  }
+
   if (isComplete) {
     return (
       <div className="app-container">
-        <CostDashboard 
+        <CostDashboard
           vms={vmwareVMs}
           costProfile={costProfile}
           onReset={resetDemo}
@@ -50,7 +57,7 @@ function App() {
   if (selectedPath === 'quick') {
     return (
       <div className="app-container">
-        <QuickStart 
+        <QuickStart
           vms={vmwareVMs}
           onComplete={handlePathComplete}
           onBack={() => setSelectedPath('none')}
@@ -94,6 +101,38 @@ function App() {
           Connected to vCenter: {vmwareVMs.length} VMs detected across {vmwareHosts.length} hosts
         </p>
 
+        {/* Add Demo Button */}
+        <div style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          borderRadius: '12px',
+          padding: '2rem',
+          marginBottom: '2rem',
+          color: 'white',
+          textAlign: 'center',
+          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.3)'
+        }}>
+          <h2 style={{ color: 'white', marginBottom: '1rem' }}>🚀 See the Complete Solution</h2>
+          <p style={{ marginBottom: '1.5rem', opacity: 0.95 }}>
+            Experience the full journey from infrastructure discovery to cost-enriched FOCUS data
+          </p>
+          <Button
+            size="lg"
+            onClick={() => setSelectedPath('demo')}
+            style={{
+              background: 'white',
+              color: '#667eea',
+              border: 'none',
+              padding: '1rem 3rem',
+              borderRadius: '8px',
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            Launch Interactive Demo
+          </Button>
+        </div>
+
         {opportunities.missingTags.length > 0 && (
           <div className="warning-banner">
             <h5>
@@ -103,17 +142,17 @@ function App() {
             <ul>
               <li>{opportunities.missingTags.length} VMs have missing tags - costs will go to 'Unallocated'</li>
               <li>{opportunities.zombies.length} VMs appear to be unused (zombie VMs)</li>
-              <li>{opportunities.poweredOff.length} VMs are powered off but still consuming resources</li>
+              <li>{opportunities.poweredOff.length} VMs are powered off but still consuming storage</li>
             </ul>
           </div>
         )}
 
-        <h2 style={{ marginTop: '2rem', marginBottom: '1rem' }}>Choose Your Setup Path</h2>
+        <h2 style={{ marginTop: '2rem', marginBottom: '1rem' }}>Or Choose Your Setup Path</h2>
         
         <div className="path-selector">
           <div className="path-card" onClick={() => setSelectedPath('quick')}>
             <h3>Quick Start</h3>
-            <div className="time-estimate">⏱️ 5 minutes</div>
+            <div className="time-estimate">⏱ 5 minutes</div>
             <div className="description">
               Get immediate cost visibility with intelligent defaults based on industry benchmarks.
             </div>
@@ -123,9 +162,9 @@ function App() {
               <li>Single adjustment slider</li>
               <li>Instant dashboard access</li>
             </ul>
-            <Button 
-              renderIcon={ArrowRight} 
-              size="md" 
+            <Button
+              renderIcon={ArrowRight}
+              size="md"
               style={{ marginTop: '1rem', width: '100%' }}
             >
               Start Quick Setup
@@ -134,7 +173,7 @@ function App() {
 
           <div className="path-card" onClick={() => setSelectedPath('guided')}>
             <h3>Guided Setup</h3>
-            <div className="time-estimate">⏱️ 15 minutes</div>
+            <div className="time-estimate">⏱ 15 minutes</div>
             <div className="description">
               Step-by-step configuration with customized cost models for your environment.
             </div>
@@ -144,9 +183,9 @@ function App() {
               <li>Software license templates</li>
               <li>Validation and recommendations</li>
             </ul>
-            <Button 
-              renderIcon={ArrowRight} 
-              size="md" 
+            <Button
+              renderIcon={ArrowRight}
+              size="md"
               kind="secondary"
               style={{ marginTop: '1rem', width: '100%' }}
             >
@@ -156,7 +195,7 @@ function App() {
 
           <div className="path-card" onClick={() => setSelectedPath('advanced')}>
             <h3>Advanced Mode</h3>
-            <div className="time-estimate">⏱️ 30+ minutes</div>
+            <div className="time-estimate">⏱ 30+ minutes</div>
             <div className="description">
               Full control over cost modeling with formula builders and multi-source integration.
             </div>
@@ -166,9 +205,9 @@ function App() {
               <li>Complex allocation rules</li>
               <li>Version control</li>
             </ul>
-            <Button 
-              renderIcon={ArrowRight} 
-              size="md" 
+            <Button
+              renderIcon={ArrowRight}
+              size="md"
               kind="tertiary"
               style={{ marginTop: '1rem', width: '100%' }}
             >
