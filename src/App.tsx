@@ -111,9 +111,9 @@ function App() {
           textAlign: 'center',
           boxShadow: '0 20px 40px rgba(102, 126, 234, 0.3)'
         }}>
-          <h2 style={{ color: 'white', marginBottom: '1rem' }}>🚀 See the Complete Solution</h2>
+          <h2 style={{ color: 'white', marginBottom: '1rem' }}>See the Integrated Solution</h2>
           <p style={{ marginBottom: '1.5rem', opacity: 0.95 }}>
-            Experience the full journey from infrastructure discovery to cost-enriched FOCUS data
+            Go from zero to one by stitching on-prem cost profiles with your on-prem and private cloud resource inventory.
           </p>
           <Button
             size="lg"
@@ -129,7 +129,7 @@ function App() {
               cursor: 'pointer'
             }}
           >
-            Launch Interactive Demo
+            Stitch Costs Now
           </Button>
         </div>
 
